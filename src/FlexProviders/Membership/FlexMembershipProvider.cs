@@ -50,7 +50,7 @@ namespace FlexProviders.Membership
         /// </returns>
         public bool Login(string username, string password, bool rememberMe = false)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username);
+            IFlexMembershipUser user = _userStore.GetUserByEmail(username);
             if (user == null)
             {
                 return false;
@@ -80,7 +80,7 @@ namespace FlexProviders.Membership
         /// <param name="user"> The user. </param>
         public void CreateAccount(IFlexMembershipUser user)
         {
-            IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username);
+            IFlexMembershipUser existingUser = _userStore.GetUserByEmail(user.Email);
             if (existingUser != null)
             {
                 throw new FlexMembershipException(FlexMembershipStatus.DuplicateUserName);
@@ -108,7 +108,7 @@ namespace FlexProviders.Membership
         /// <returns> <c>true</c> if the specified username has a local account; otherwise, <c>false</c> . </returns>
         public bool HasLocalAccount(string userName)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(userName);
+            IFlexMembershipUser user = _userStore.GetUserByEmail(userName);
             return user != null && !String.IsNullOrEmpty(user.Password);
         }
 
@@ -121,7 +121,7 @@ namespace FlexProviders.Membership
         /// <returns> </returns>
         public bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username);
+            IFlexMembershipUser user = _userStore.GetUserByEmail(username);
             string encodedPassword = _encoder.Encode(oldPassword, user.Salt);
             if (!encodedPassword.Equals(user.Password))
             {
@@ -140,7 +140,7 @@ namespace FlexProviders.Membership
         /// <param name="newPassword"> The new password. </param>
         public void SetLocalPassword(string username, string newPassword)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username);
+            IFlexMembershipUser user = _userStore.GetUserByEmail(username);
             if (!String.IsNullOrEmpty(user.Password))
             {
                 throw new FlexMembershipException("SetLocalPassword can only be used on accounts that currently don't have a local password.");
@@ -159,7 +159,7 @@ namespace FlexProviders.Membership
         /// <returns> </returns>
         public string GeneratePasswordResetToken(string username, int tokenExpirationInMinutesFromNow = 1440)
         {
-            IFlexMembershipUser user = _userStore.GetUserByUsername(username);
+            IFlexMembershipUser user = _userStore.GetUserByEmail(username);
             if (user == null)
             {
                 throw new FlexMembershipException(FlexMembershipStatus.InvalidUserName);
@@ -209,7 +209,7 @@ namespace FlexProviders.Membership
         /// <param name="user"> The user. </param>
         public void CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
         {
-            IFlexMembershipUser existingUser = _userStore.GetUserByUsername(user.Username);
+            IFlexMembershipUser existingUser = _userStore.GetUserByEmail(user.Email);
             if (existingUser == null)
             {
                 _userStore.Add(user);
@@ -230,9 +230,9 @@ namespace FlexProviders.Membership
             {
                 return false;
             }
-            IEnumerable<OAuthAccount> accounts = _userStore.GetOAuthAccountsForUser(user.Username);
+			IEnumerable<OAuthAccount> accounts = _userStore.GetOAuthAccountsForUser(user.Email);
 
-            if (HasLocalAccount(user.Username))
+			if (HasLocalAccount(user.Email))
                 return _userStore.DeleteOAuthAccount(provider, providerUserId);
 
             if (accounts.Count() > 1)
@@ -330,7 +330,7 @@ namespace FlexProviders.Membership
             IFlexMembershipUser user = _userStore.GetUserByOAuthProvider(provider, providerUserId);
             if (user != null)
             {
-                return user.Username;
+				return user.Email;
             }
             return String.Empty;
         }

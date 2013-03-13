@@ -12,57 +12,59 @@ namespace FlexProviders.EF
         : IFlexUserStore
             where TUser: class, IFlexMembershipUser, new()             
     {
-        private readonly DbContext _context;
+        //private readonly DbContext _context;
+	    private readonly IFlexDataStore _db;
 
-        public FlexMembershipUserStore (DbContext context)
-        {
-            _context = context;
+		public FlexMembershipUserStore (IFlexDataStore db) {
+	        _db = db;
         }
                     
-        public IFlexMembershipUser GetUserByUsername(string username)
+        public IFlexMembershipUser GetUserByEmail(string username)
         {
-            return _context.Set<TUser>().SingleOrDefault(u => u.Username == username);
+			return _db.Single<TUser>(u => u.Email == username);//.Set<TUser>().SingleOrDefault(u => u.Email == username);
         }
 
         public IFlexMembershipUser Add(IFlexMembershipUser user)
         {
-            _context.Set<TUser>().Add((TUser)user);
-            _context.SaveChanges();
-            return user;
+			user = _db.Add((TUser)user);//.Set<TUser>().Add((TUser)user);
+			_db.CommitChanges();//.SaveChanges();
+			return user;
         }
 
-        public IFlexMembershipUser Save(IFlexMembershipUser user)
-        {
-            _context.Entry(user).State = EntityState.Modified;
-            _context.SaveChanges();
+        public IFlexMembershipUser Save(IFlexMembershipUser user) {
+			//_db.Entry(user).State = EntityState.Modified;
+			_db.CommitChanges();
            return user;
         }
 
         public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user)
         {
-            user = _context.Set<TUser>().Single(u => u.Username == user.Username);
+			user = _db.Single<TUser>(u => u.Email == user.Email);//.Set<TUser>().Single(u => u.Email == user.Email);
             if(user.OAuthAccounts == null)
             {
                 user.OAuthAccounts = new EntityCollection<FlexOAuthAccount>();
             }
             user.OAuthAccounts.Add(new FlexOAuthAccount() { Provider = provider, ProviderUserId = providerUserId});
-            _context.SaveChanges();
+			_db.CommitChanges();
             return user;
         }
 
         public IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId)
         {
-            var user = _context.Set<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
+			//var user = _db.Set<TUser>().SingleOrDefault(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
+	        var user = _db.Single<TUser>(u => u.OAuthAccounts.Any(a => a.Provider == provider && a.ProviderUserId == providerUserId));
             return user;
         }
 
-        public bool DeleteOAuthAccount(string provider, string providerUserId)
-        {            
-            var account = _context.Set<FlexOAuthAccount>().Find(provider, providerUserId);
+        public bool DeleteOAuthAccount(string provider, string providerUserId) {
+	        //var account = _db.Set<FlexOAuthAccount>().Find(provider, providerUserId);
+	        var account = _db.Single<FlexOAuthAccount>(x => x.Provider == provider && x.ProviderUserId == providerUserId);
             if(account != null)
             {
-                _context.Set<FlexOAuthAccount>().Remove(account);
-                _context.SaveChanges();
+				//_db.Set<FlexOAuthAccount>().Remove(account);
+				_db.Delete(account);
+				//_db.SaveChanges();
+	            _db.CommitChanges();
                 return true;
             }            
             return false;
@@ -70,13 +72,15 @@ namespace FlexProviders.EF
 
         public IFlexMembershipUser GetUserByPasswordResetToken(string passwordResetToken)
         {
-            var user = _context.Set<TUser>().SingleOrDefault(u => u.PasswordResetToken == passwordResetToken);
+			//var user = _db.Set<TUser>().SingleOrDefault(u => u.PasswordResetToken == passwordResetToken);
+	        var user = _db.Single<TUser>(u => u.PasswordResetToken == passwordResetToken);
             return user;
         }
 
         public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username)
         {
-            var user = _context.Set<TUser>().Single(u => u.Username == username);
+			//var user = _db.Set<TUser>().Single(u => u.Email == username);
+	        var user = _db.Single<TUser>(u => u.Email == username);
             return user.OAuthAccounts.Select(account => new OAuthAccount(account.Provider, account.ProviderUserId));
         }
     }

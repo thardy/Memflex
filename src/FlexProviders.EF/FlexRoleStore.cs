@@ -8,55 +8,57 @@ namespace FlexProviders.EF
 {
     public class FlexRoleStore<TRole, TUser> : IFlexRoleStore
         where TRole : class, IFlexRole<TUser>, new()
-        where TUser : class, IFlexMembershipUser
+        where TUser : class, IFlexMembershipUser, new()
     {
-        private readonly DbContext _context;
+		private readonly IFlexDataStore _db;
 
-        public FlexRoleStore(DbContext context)
+		public FlexRoleStore(IFlexDataStore db)
         {
-            _context = context;
+            _db = db;
         }
 
         public void CreateRole(string roleName)
         {
             var role = new TRole {Name = roleName};
-            _context.Set<TRole>().Add(role);
-            _context.SaveChanges();
+            _db.Add(role);
+            _db.CommitChanges();
         }
 
         public string[] GetRolesForUser(string username)
         {
-            return _context.Set<TRole>().Where(role => role.Users.Any(u => u.Username.Equals(username)))
-                           .Select(role => role.Name).ToArray();
+//            return _db.Set<TRole>().Where(role => role.Users.Any(u => u.Email.Equals(username)))
+//                           .Select(role => role.Name).ToArray();
+			return _db.All<TRole>().Where(role => role.Users.Any(u => u.Email.Equals(username)))
+						   .Select(role => role.Name).ToArray();
         }
 
         public string[] GetUsersInRole(string roleName)
         {
-            return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
-                .SelectMany(role => role.Users).Select(user => user.Username)
-                           .ToArray();
+            return _db.All<TRole>().Where(role => role.Name.Equals(roleName))
+							.SelectMany(role => role.Users).Select(user => user.Email)
+							.ToArray();
 
         }
 
         public string[] GetAllRoles()
         {
-            return _context.Set<TRole>().Select(role => role.Name).ToArray();
+            return _db.All<TRole>().Select(role => role.Name).ToArray();
         }
 
         public string[] FindUsersInRole(string roleName, string usernameToMatch)
         {
-            return _context.Set<TRole>().Where(role => role.Name.Equals(roleName))
-                .SelectMany(role => role.Users).Where(user => user.Username.StartsWith(usernameToMatch)).Select(user => user.Username)
-                          .ToArray();
+            return _db.All<TRole>().Where(role => role.Name.Equals(roleName))
+							.SelectMany(role => role.Users).Where(user => user.Email.StartsWith(usernameToMatch)).Select(user => user.Email)
+							.ToArray();
         }
 
         public void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
         {
-            var users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username)).ToList();
+            var users = _db.All<TUser>().Where(u => usernames.Contains(u.Email)).ToList();
 
             foreach (var roleName in roleNames)
             {
-                var role = _context.Set<TRole>().Include(r=>r.Users).SingleOrDefault(r => r.Name == roleName);
+                var role = _db.All<TRole>().Include(r=>r.Users).SingleOrDefault(r => r.Name == roleName);
                 if (role != null)
                 {
                     foreach (var user in users)
@@ -65,16 +67,16 @@ namespace FlexProviders.EF
                     }
                 }
             }
-            _context.SaveChanges();
+            _db.CommitChanges();
         }
 
         public void AddUsersToRoles(string[] usernames, string[] roleNames)
         {
-            var users = _context.Set<TUser>().Where(u => usernames.Contains(u.Username)).ToList();
+            var users = _db.All<TUser>().Where(u => usernames.Contains(u.Email)).ToList();
 
             foreach (var roleName in roleNames)
             {
-                var role = _context.Set<TRole>().SingleOrDefault(r => r.Name == roleName);
+                var role = _db.Single<TRole>(r => r.Name == roleName);
                 if (role != null)
                 {
                     if(role.Users == null)
@@ -87,22 +89,22 @@ namespace FlexProviders.EF
                     }
                 }
             }
-            _context.SaveChanges();
+            _db.CommitChanges();
         }
 
         public bool RoleExists(string roleName)
         {
-            return _context.Set<TRole>().Any(r => r.Name == roleName);
+            return _db.All<TRole>().Any(r => r.Name == roleName);
         }
 
         public bool DeleteRole(string roleName)
         {
-            var role = _context.Set<TRole>().Include(r=>r.Users).SingleOrDefault(r => r.Name == roleName);
+            var role = _db.All<TRole>().Include(r=>r.Users).SingleOrDefault(r => r.Name == roleName);
             if (role != null)
             {
                 role.Users.Clear();
-                _context.Set<TRole>().Remove(role);
-                _context.SaveChanges();
+                _db.Delete(role);
+                _db.CommitChanges();
                 return true;
             }
             return false;

@@ -21,7 +21,7 @@ namespace FlexProviders.Tests.Integration.EF.Roles
         [AutoRollback]
         public void Can_Delete_Role_With_Users()
         {
-            var user = new User { Username = "sallen", Password = "123" };
+            var user = new User { Email = "sallen", Password = "123" };
             RoleProvider.CreateRole("admin");
             MembershipProvider.CreateAccount(user);
             RoleProvider.AddUsersToRoles(new[] { "sallen" }, new[] { "admin" });
@@ -35,7 +35,7 @@ namespace FlexProviders.Tests.Integration.EF.Roles
         [AutoRollback]
         public void Can_Throw_When_Users_In_Role()
         {
-            var user = new User { Username = "sallen", Password = "123" };
+            var user = new User { Email = "sallen", Password = "123" };
             RoleProvider.CreateRole("admin");
             MembershipProvider.CreateAccount(user);
             RoleProvider.AddUsersToRoles(new[] { "sallen" }, new[] { "admin" });
@@ -47,8 +47,8 @@ namespace FlexProviders.Tests.Integration.EF.Roles
         [AutoRollback]
         public void Can_Remove_Users_From_Roles()
         {
-            var user1 = new User { Username = "sallen", Password = "123" };
-            var user2 = new User { Username = "missmm", Password = "123" };
+            var user1 = new User { Email = "sallen", Password = "123" };
+            var user2 = new User { Email = "missmm", Password = "123" };
 
             RoleProvider.CreateRole("admin");
             RoleProvider.CreateRole("engineering");

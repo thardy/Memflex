@@ -10,18 +10,18 @@ namespace FlexProviders.Tests.Integration.EF.Membership
         [AutoRollback]
         public void Can_Create_Account()
         {
-            var user = new User() {Username = "sallen", Password = "12345678"};
+            var user = new User() {Email = "sallen", Password = "12345678"};
 
             MembershipProvider.CreateAccount(user);
 
-            Assert.True(_db.CanFindUsername("sallen"));
+            Assert.True(_db.CanFindEmail("sallen"));
         }
 
         [Fact]
         [AutoRollback]
         public void Fails_If_Duplicate_Username()
         {
-            var user = new User() { Username = "sallen", Password = "12345678" };
+            var user = new User() { Email = "sallen", Password = "12345678" };
 
             MembershipProvider.CreateAccount(user);
 
@@ -32,7 +32,7 @@ namespace FlexProviders.Tests.Integration.EF.Membership
         [AutoRollback]
         public void Account_Created_As_Local_Account()
         {
-            var user = new User() { Username = "sallen", Password = "12345678" };
+            var user = new User() { Email = "sallen", Password = "12345678" };
             
             MembershipProvider.CreateAccount(user);
             

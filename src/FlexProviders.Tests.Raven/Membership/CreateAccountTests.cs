@@ -9,11 +9,11 @@ namespace FlexProviders.Tests.Integration.Raven.Membership
         [Fact]         
         public void Can_Create_Account()
         {
-            var user = new User() {Username = "sallen", Password = "12345678"};
+            var user = new User() {Email = "sallen", Password = "12345678"};
 
             MembershipProvider.CreateAccount(user);
           
-            user = Verifier.Query<User>().SingleOrDefault(u => u.Username == "sallen");
+            user = Verifier.Query<User>().SingleOrDefault(u => u.Email == "sallen");
 
             Assert.NotNull(user);
         }
@@ -21,8 +21,8 @@ namespace FlexProviders.Tests.Integration.Raven.Membership
         [Fact]
         public void Fails_If_Duplicate_Username()
         {
-            var user1 = new User() { Username = "sallen", Password = "12345678" };
-            var user2 = new User() {Username = "sallen", Password = "4567890"};
+            var user1 = new User() { Email = "sallen", Password = "12345678" };
+            var user2 = new User() {Email = "sallen", Password = "4567890"};
 
             MembershipProvider.CreateAccount(user1);
              
@@ -32,7 +32,7 @@ namespace FlexProviders.Tests.Integration.Raven.Membership
         [Fact]
         public void Account_Created_As_Local_Account()
         {
-            var user = new User() { Username = "sallen", Password = "12345678" };
+            var user = new User() { Email = "sallen", Password = "12345678" };
             
             MembershipProvider.CreateAccount(user);
             

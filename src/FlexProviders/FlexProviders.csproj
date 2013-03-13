@@ -66,6 +66,7 @@
     <Compile Include="Membership\FlexMembershipStatus.cs" />
     <Compile Include="Membership\FlexOAuthAccount.cs" />
     <Compile Include="Membership\IApplicationEnvironment.cs" />
+    <Compile Include="Membership\IFlexDataStore.cs" />
     <Compile Include="Membership\IFlexMembershipProvider.cs" />
     <Compile Include="Membership\IFlexMembershipUser.cs" />
     <Compile Include="Membership\IFlexOAuthProvider.cs" />

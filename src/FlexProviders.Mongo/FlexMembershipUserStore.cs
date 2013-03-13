@@ -107,9 +107,9 @@ namespace FlexProviders.Mongo
             return user;
         }
 
-        public IFlexMembershipUser GetUserByUsername(string username)
+        public IFlexMembershipUser GetUserByEmail(string username)
         {
-            return _userCollection.AsQueryable().SingleOrDefault(u => u.Username == username);
+            return _userCollection.AsQueryable().SingleOrDefault(u => u.Email == username);
         }
 
         public IFlexMembershipUser Add(IFlexMembershipUser user)
@@ -120,7 +120,7 @@ namespace FlexProviders.Mongo
 
         public IFlexMembershipUser Save(IFlexMembershipUser user)
         {
-            TUser existingUser = _userCollection.AsQueryable().SingleOrDefault(u => u.Username == user.Username);
+            TUser existingUser = _userCollection.AsQueryable().SingleOrDefault(u => u.Email == user.Email);
             foreach (PropertyInfo property in user.GetType().GetProperties().Where(p => p.CanWrite))
                 property.SetValue(existingUser, property.GetValue(user));
 
@@ -163,17 +163,17 @@ namespace FlexProviders.Mongo
         public IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username)
         {
             return _userCollection.AsQueryable()
-                .Single(u => u.Username == username)
+                .Single(u => u.Email == username)
                 .OAuthAccounts.ToArray()
                 .Select(o => new OAuthAccount(o.Provider, o.ProviderUserId));
         }
 
         public IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, string username)
         {
-            TUser user = _userCollection.AsQueryable().SingleOrDefault(u => u.Username == username);
+            TUser user = _userCollection.AsQueryable().SingleOrDefault(u => u.Email == username);
             if (user == null)
             {
-                user = new TUser {Username = username};
+                user = new TUser {Email = username};
                 _userCollection.Save(user);
             }
             var account = new FlexOAuthAccount {Provider = provider, ProviderUserId = providerUserId};

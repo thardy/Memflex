@@ -27,8 +27,9 @@ namespace LogMeIn {
                             x.For<ISecurityEncoder>().Singleton().Use<DefaultSecurityEncoder>();
 
                             
-                            x.For<MovieDb>().HybridHttpOrThreadLocalScoped().Use<MovieDb>();
-                            x.SelectConstructor(() => new MovieDb());                            
+                            //x.For<MoviesDb>().HybridHttpOrThreadLocalScoped().Use<MoviesDb>();
+							x.For<IFlexDataStore>().HybridHttpOrThreadLocalScoped().Use<MoviesDb>();
+                            x.SelectConstructor(() => new MoviesDb());                            
                         });
             return ObjectFactory.Container;
         }

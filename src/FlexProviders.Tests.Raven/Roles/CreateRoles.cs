@@ -15,7 +15,7 @@ namespace FlexProviders.Tests.Integration.Raven.Roles
         [Fact]
         public void Can_Add_Users_To_Role()
         {
-            var user = new User { Username = "sallen", Password = "123" };
+            var user = new User { Email = "sallen", Password = "123" };
             RoleProvider.CreateRole("admin");
             MembershipProvider.CreateAccount(user);
 

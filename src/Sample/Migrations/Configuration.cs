@@ -9,14 +9,14 @@ namespace LogMeIn.Migrations
 {
 
 
-    public sealed class Configuration : DbMigrationsConfiguration<LogMeIn.Models.MovieDb>
+    public sealed class Configuration : DbMigrationsConfiguration<LogMeIn.Models.MoviesDb>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Models.MovieDb context)
+        protected override void Seed(Models.MoviesDb context)
         {
             var seed = ConfigurationManager.AppSettings["seed"];
             if (seed != "false")
@@ -27,7 +27,7 @@ namespace LogMeIn.Migrations
 
                 if (!membership.HasLocalAccount("sallen"))
                 {
-                    membership.CreateAccount(new User {Username = "sallen", Password = "123", FavoriteNumber = 24});
+                    membership.CreateAccount(new User {Email = "sallen", Password = "123", FavoriteNumber = 24});
                 }
                 if (!roles.RoleExists("admin"))
                 {

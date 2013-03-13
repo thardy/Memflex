@@ -11,7 +11,7 @@ namespace FlexProviders.Tests.Integration.EF.Membership
         {
             var username = "sallen";
             var password = "12345678";
-            var user = new User { Username = username, Password = password };
+            var user = new User { Email = username, Password = password };
             MembershipProvider.CreateAccount(user);
 
             var firstEncodedPassword = _db.GetPassword(username);

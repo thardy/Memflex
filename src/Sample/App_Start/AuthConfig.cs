@@ -16,19 +16,17 @@ namespace LogMeIn
             // To let users of this site log in using their accounts from other sites such as Microsoft, Facebook, and Twitter,
             // you must update this site. For more information visit http://go.microsoft.com/fwlink/?LinkID=252166
 
-            //FlexMembershipProvider.RegisterClient(
-            //              new MicrosoftClient("", ""), 
-            //              "Microsoft", new Dictionary<string, object>());
-
-            //FlexMembershipProvider.RegisterClient(
-            //              new TwitterClient("", ""), 
-            //              "Twitter", new Dictionary<string, object>());
-
-            //FlexMembershipProvider.RegisterClient(
-            //    new FacebookClient("", ""), 
-            //    "Facebook", new Dictionary<string, object>() );
-
-            FlexMembershipProvider.RegisterClient(
+//			FlexMembershipProvider.RegisterClient(
+//			   new MicrosoftClient("", ""), 
+//			   "Microsoft", new Dictionary<string, object>());
+//
+//			Dictionary<String, Object> facebookPermissions = new Dictionary<string, object>();
+//			facebookPermissions.Add("scope", "email");
+//			FlexMembershipProvider.RegisterClient(
+//			   new FacebookClient("", ""), 
+//			   "Facebook", facebookPermissions);
+			
+			FlexMembershipProvider.RegisterClient(
                new GoogleOpenIdClient(),
                "Google", new Dictionary<string, object>());
         }

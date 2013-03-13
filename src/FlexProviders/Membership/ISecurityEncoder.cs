@@ -92,8 +92,10 @@ namespace FlexProviders.Membership
             return Convert.ToBase64String(buffer);
         }
 
-        private string EncodePassword(string password, string salt)
-        {            
+        private string EncodePassword(string password, string salt) {
+	        if (string.IsNullOrWhiteSpace(salt))
+		        return string.Empty;
+
             byte[] passwordBytes = Encoding.Unicode.GetBytes(password);
             byte[] saltBytes = Convert.FromBase64String(salt);            
 

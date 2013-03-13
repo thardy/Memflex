@@ -9,7 +9,7 @@ namespace FlexProviders.Tests.Integration.EF.Roles
         [AutoRollback]
         public void Can_Find_User_In_Role()
         {
-            var user = new User { Username = "sallen", Password = "123" };
+            var user = new User { Email = "sallen", Password = "123" };
             RoleProvider.CreateRole("admin");
             MembershipProvider.CreateAccount(user);
 
@@ -22,7 +22,7 @@ namespace FlexProviders.Tests.Integration.EF.Roles
         [AutoRollback]
         public void Doesnt_Find_User_Not_In_Role()
         {
-            var user = new User { Username = "sallen", Password = "123" };
+            var user = new User { Email = "sallen", Password = "123" };
             RoleProvider.CreateRole("admin");
             MembershipProvider.CreateAccount(user);
 
@@ -35,7 +35,7 @@ namespace FlexProviders.Tests.Integration.EF.Roles
         [AutoRollback]
         public void Can_Get_Roles_For_User()
         {
-            var user = new User { Username = "sallen", Password = "123" };
+            var user = new User { Email = "sallen", Password = "123" };
             MembershipProvider.CreateAccount(user);
 
             RoleProvider.CreateRole("admin");
@@ -82,8 +82,8 @@ namespace FlexProviders.Tests.Integration.EF.Roles
         [AutoRollback]
         public void Can_Get_Users_In_Role()
         {
-            var user1 = new User { Username = "sallen", Password = "123" };
-            var user2 = new User { Username = "missmm", Password = "123" };
+            var user1 = new User { Email = "sallen", Password = "123" };
+            var user2 = new User { Email = "missmm", Password = "123" };
 
             RoleProvider.CreateRole("admin");
             RoleProvider.CreateRole("engineering");

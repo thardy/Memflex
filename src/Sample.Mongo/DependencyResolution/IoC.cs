@@ -57,7 +57,7 @@ namespace LogMeIn {
                             var userCollection = database.GetCollection<User>("user");
                             var roleCollection = database.GetCollection<User>("role");
                             
-                            userCollection.EnsureIndex(IndexKeys<User>.Ascending(u => u.Username), IndexOptions.SetUnique(true));
+                            userCollection.EnsureIndex(IndexKeys<User>.Ascending(u => u.Email), IndexOptions.SetUnique(true));
                             userCollection.EnsureIndex(IndexKeys.Ascending("OAuthAccounts.Provider", "OAuthAccounts.ProviderUserId"), IndexOptions.SetUnique(true));
                             roleCollection.EnsureIndex(IndexKeys<Role>.Ascending(r => r.Name), IndexOptions.SetUnique(true));
                             roleCollection.EnsureIndex(IndexKeys<Role>.Ascending(r => r.Users));

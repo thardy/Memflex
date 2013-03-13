@@ -9,7 +9,7 @@ namespace FlexProviders.Tests.Integration.Raven.Membership
         {
             var username = "sallen";
             var password = "12345678";
-            var user = new User { Username = username, Password = password };
+            var user = new User { Email = username, Password = password };
             MembershipProvider.CreateAccount(user);
 
             bool result = MembershipProvider.Login(username, password);
@@ -22,7 +22,7 @@ namespace FlexProviders.Tests.Integration.Raven.Membership
         {
             var username = "sallen";
             var password = "12345678";
-            var user = new User { Username = username, Password = password };
+            var user = new User { Email = username, Password = password };
             MembershipProvider.CreateAccount(user);
 
             bool result = MembershipProvider.Login(username, "foo");

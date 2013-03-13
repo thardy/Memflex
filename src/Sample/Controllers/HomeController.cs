@@ -12,7 +12,7 @@ namespace LogMeIn.Controllers
 
     public class HomeController : Controller
     {
-        private MovieDb db = new MovieDb();
+        private MoviesDb db = new MoviesDb();
 
         //
         // GET: /Home/

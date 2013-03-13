@@ -2,21 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using FlexProviders.Membership;
 
-namespace FlexProviders.Tests.Integration.EF
+namespace LogMeIn.Models
 {
-    public class SomeDb : DbContext, IFlexDataStore
+    public class MoviesDb : DbContext, IFlexDataStore
     {
-        public SomeDb()
+        public MoviesDb()
         {
         }
 
-        public SomeDb(string connectionStringOrName)
+        public MoviesDb(string connectionStringOrName)
             : base(connectionStringOrName)
         {
         }
 
+        public DbSet<Movie> Movies { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 

@@ -8,7 +8,7 @@ namespace FlexProviders.Membership
         IFlexMembershipUser Add(IFlexMembershipUser user);        
         IFlexMembershipUser Save(IFlexMembershipUser user);
         IFlexMembershipUser CreateOAuthAccount(string provider, string providerUserId, IFlexMembershipUser user);        
-        IFlexMembershipUser GetUserByUsername(string username);
+        IFlexMembershipUser GetUserByEmail(string username);
         IFlexMembershipUser GetUserByOAuthProvider(string provider, string providerUserId);        
         IEnumerable<OAuthAccount> GetOAuthAccountsForUser(string username);
         bool DeleteOAuthAccount(string provider, string providerUserId);

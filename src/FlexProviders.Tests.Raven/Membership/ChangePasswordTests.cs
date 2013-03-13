@@ -10,12 +10,12 @@ namespace FlexProviders.Tests.Integration.Raven.Membership
         {
             var username = "sallen";
             var password = "12345678";
-            var user = new User { Username = username, Password = password };
+            var user = new User { Email = username, Password = password };
             MembershipProvider.CreateAccount(user);
 
-            var firstEncodedPassword = Verifier.Query<User>().Single(u => u.Username == "sallen").Password;
+            var firstEncodedPassword = Verifier.Query<User>().Single(u => u.Email == "sallen").Password;
             MembershipProvider.ChangePassword(username, password, "foo");
-            var secondEncodedPassword = Verifier.Query<User>().Single(u => u.Username == "sallen").Password;
+            var secondEncodedPassword = Verifier.Query<User>().Single(u => u.Email == "sallen").Password;
 
             Assert.NotEqual(firstEncodedPassword, secondEncodedPassword);
         }

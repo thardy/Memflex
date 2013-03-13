@@ -20,9 +20,9 @@ namespace FlexProviders.Raven
             _session = session;
         }
 
-        public IFlexMembershipUser GetUserByUsername(string username)
+        public IFlexMembershipUser GetUserByEmail(string username)
         {
-            return _session.Query<TUser>().SingleOrDefault(u => u.Username == username);
+            return _session.Query<TUser>().SingleOrDefault(u => u.Email == username);
         }
 
         public IFlexMembershipUser Add(IFlexMembershipUser user)
@@ -34,7 +34,7 @@ namespace FlexProviders.Raven
 
         public IFlexMembershipUser Save(IFlexMembershipUser user)
         {
-            var existingUser = _session.Query<TUser>().SingleOrDefault(u => u.Username == user.Username);
+            var existingUser = _session.Query<TUser>().SingleOrDefault(u => u.Email == user.Email);
             foreach(var property in user.GetType().GetProperties().Where(p => p.CanWrite))
             {
                 property.SetValue(existingUser, property.GetValue(user));
@@ -90,7 +90,7 @@ namespace FlexProviders.Raven
         {
             return _session
                 .Query<TUser>()
-                .Single(u => u.Username == username)
+                .Single(u => u.Email == username)
                 .OAuthAccounts
                 .ToArray()
                 .Select(o => new OAuthAccount(o.Provider, o.ProviderUserId));

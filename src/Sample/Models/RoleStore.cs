@@ -1,10 +1,12 @@
 using FlexProviders.EF;
+using FlexProviders.Membership;
 
 namespace LogMeIn.Models
 {
     public class RoleStore : FlexRoleStore<Role,User>
     {
-        public RoleStore(MovieDb db) : base(db)
+		public RoleStore(IFlexDataStore db)
+			: base(db)
         {
             
         }

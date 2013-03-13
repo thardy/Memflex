@@ -35,19 +35,19 @@ namespace FlexProviders.Tests.Integration.EF
             }
         }
 
-        public bool CanFindUsername(string username)
+        public bool CanFindEmail(string email)
         {
-            return _db.Users.FindByUsername(username) != null;
+            return _db.Users.FindByEmail(email) != null;
         }
 
-        public string GetPassword(string username)
+        public string GetPassword(string email)
         {
-            return _db.Users.FindByUsername(username).Password;
+            return _db.Users.FindByEmail(email).Password;
         }
 
-        public int GetCountOfOAuthAccounts(string username)
+        public int GetCountOfOAuthAccounts(string email)
         {
-            var userId = _db.Users.FindByUsername(username).Id;
+			var userId = _db.Users.FindByEmail(email).Id;
             return _db.FlexOAuthAccounts.FindAll(_db.FlexOAuthAccounts.User_Id == userId).Count();
         }
 
@@ -58,7 +58,7 @@ namespace FlexProviders.Tests.Integration.EF
 
         public bool UserIsInRole(string username, string rolename)
         {
-            var userId = _db.Users.FindByUsername(username).Id;
+            var userId = _db.Users.FindByEmail(username).Id;
             var roleId = _db.Roles.FindByName(rolename).Id;
 
             return _db.RoleUsers.FindBy(User_Id: userId, Role_Id: roleId) != null;       
